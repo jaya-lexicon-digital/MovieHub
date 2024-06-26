@@ -1,6 +1,6 @@
 namespace MovieHub.API.Models;
 
-public class MovieDto
+public class MovieWithoutCinemasDto
 {
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
@@ -11,5 +11,4 @@ public class MovieDto
     public string Director { get; set; } = string.Empty;
     public string Rating { get; set; } = string.Empty;
     public string PrincessTheatreMovieId { get; set; } = string.Empty;
-    public ICollection<CinemaDto> Cinemas { get; set; } = new List<CinemaDto>();
 }

@@ -46,6 +46,8 @@ public class Movie
     [MaxLength(16)]
     [Column("princessTheatreMovieId")]
     public string PrincessTheatreMovieId { get; set; }
+    
+    public ICollection<MovieCinema> MovieCinema { get; set; } = new List<MovieCinema>();
 
     public Movie(string title, DateOnly releaseDate, string genre, int runtime, string synopsis, string director,
         string rating, string princessTheatreMovieId)

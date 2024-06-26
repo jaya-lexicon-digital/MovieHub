@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MovieHub.API.DbContexts;
+using MovieHub.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<MovieHubDbContext>(dbContextOptions =>
     dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings:MovieHubDBConnectionString"]));
+
+builder.Services.AddScoped<IMovieHubRepository, MovieHubRepository>();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 

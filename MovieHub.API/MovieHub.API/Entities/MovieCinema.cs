@@ -12,11 +12,11 @@ public class MovieCinema
     
     [ForeignKey("movieId")]
     [Required]
-    public Movie Movie { get; set; }
+    public Movie? Movie { get; set; }
     
     [ForeignKey("cinemaId")]
     [Required]
-    public Cinema Cinema { get; set; }
+    public Cinema? Cinema { get; set; }
     
     [Required]
     [Column("showtime")]
