@@ -1,0 +1,123 @@
+{
+	"info": {
+		"_postman_id": "a6e37f4d-e34f-46fd-99b2-c5d99afd211c",
+		"name": "MovieHub",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33250105"
+	},
+	"item": [
+		{
+			"name": "GET Movies",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api-host}}/api/movies",
+					"host": [
+						"{{api-host}}"
+					],
+					"path": [
+						"api",
+						"movies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Movies with Paging",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api-host}}/api/movies?pageNumber=2&pageSize=5",
+					"host": [
+						"{{api-host}}"
+					],
+					"path": [
+						"api",
+						"movies"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "2"
+						},
+						{
+							"key": "pageSize",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Movies by Title",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api-host}}/api/movies?title=Star Wars: A New Hope",
+					"host": [
+						"{{api-host}}"
+					],
+					"path": [
+						"api",
+						"movies"
+					],
+					"query": [
+						{
+							"key": "title",
+							"value": "Star Wars: A New Hope"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Movies by Genre",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api-host}}/api/movies?genre=Live Action",
+					"host": [
+						"{{api-host}}"
+					],
+					"path": [
+						"api",
+						"movies"
+					],
+					"query": [
+						{
+							"key": "genre",
+							"value": "Live Action"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Movie by Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api-host}}/api/movies/1",
+					"host": [
+						"{{api-host}}"
+					],
+					"path": [
+						"api",
+						"movies",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
