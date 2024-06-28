@@ -34,3 +34,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Note: the below line, allows us to later create a Test Server via WebApplicationFactory<Program>
+public partial class Program { }
