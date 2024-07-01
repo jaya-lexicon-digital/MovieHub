@@ -56,7 +56,7 @@ public class MoviesController : ControllerBase
         var movieDto = _mapper.Map<MovieDto>(movie);
         if (includeCinemas)
         {
-            movieDto.Cinemas = _mapper.Map<ICollection<CinemaDto>>(movie.MovieCinema);
+            movieDto.Cinemas = _mapper.Map<ICollection<CinemaDto>>(movie.MovieCinemas);
         }
 
         return Ok(movieDto);

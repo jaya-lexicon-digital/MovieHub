@@ -45,7 +45,7 @@ public class MovieHubRepository : IMovieHubRepository
         if (includeCinemas)
         {
             return await _context.Movie
-                .Include(m => m.MovieCinema)
+                .Include(m => m.MovieCinemas)
                 .ThenInclude(mc => mc.Cinema)
                 .Where(m => m.Id == movieId)
                 .FirstOrDefaultAsync();

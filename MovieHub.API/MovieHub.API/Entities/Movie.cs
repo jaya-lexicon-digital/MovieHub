@@ -47,7 +47,8 @@ public class Movie
     [Column("princessTheatreMovieId")]
     public string PrincessTheatreMovieId { get; set; }
     
-    public ICollection<MovieCinema> MovieCinema { get; set; } = new List<MovieCinema>();
+    public ICollection<MovieCinema> MovieCinemas { get; set; } = new List<MovieCinema>();
+    public ICollection<MovieReview> MovieReviews { get; set; } = new List<MovieReview>();
 
     public Movie(string title, DateOnly releaseDate, string genre, int runtime, string synopsis, string director,
         string rating, string princessTheatreMovieId)

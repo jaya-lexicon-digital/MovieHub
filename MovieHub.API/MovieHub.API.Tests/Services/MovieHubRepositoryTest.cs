@@ -125,8 +125,8 @@ public class MovieHubRepositoryTest: IClassFixture<TestingWebAppFactory<Program>
         
         if (includeCinemas)
         {
-            var movieCinema = movie.MovieCinema.First();
-            Assert.Equal(2, movie.MovieCinema.Count);
+            var movieCinema = movie.MovieCinemas.First();
+            Assert.Equal(2, movie.MovieCinemas.Count);
             Assert.Equal("Star Wars", movieCinema.Movie.Title);
             Assert.Equal("Village - Hoppers Crossing", movieCinema.Cinema.Name);
             Assert.Equal(DateOnly.Parse("2024-07-13"), movieCinema.Showtime);

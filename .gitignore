@@ -1,3 +1,5 @@
 .idea
 bin
 obj
+/MovieHub.API/MovieHub.API/MovieHub.db-shm
+/MovieHub.API/MovieHub.API/MovieHub.db-wal
