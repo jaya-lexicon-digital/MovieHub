@@ -26,21 +26,20 @@ public class MoviesControllerTests : IClassFixture<TestingWebAppFactory<Program>
 
         // Assert
         response.EnsureSuccessStatusCode();
-        var movies = await response.Content.ReadFromJsonAsync<List<MovieDto>>();
+        var moviesResponse = await response.Content.ReadFromJsonAsync<MoviesDto>();
 
-        IEnumerable<string> values;
         PaginationMetadata? paginationMetadata = null;
-        if (response.Headers.TryGetValues("X-Pagination", out values))
+        if (response.Headers.TryGetValues("X-Pagination", out var values))
         {
             paginationMetadata = JsonConvert.DeserializeObject<PaginationMetadata>(values.First());
         }
 
-        Assert.Equal("application/json; charset=utf-8", response.Content.Headers.ContentType.ToString());
-        Assert.Equal(1, paginationMetadata.CurrentPage);
+        Assert.Equal("application/json; charset=utf-8", response.Content.Headers.ContentType?.ToString());
+        Assert.Equal(1, paginationMetadata!.CurrentPage);
         Assert.Equal(20, paginationMetadata.PageSize);
         Assert.Equal(3, paginationMetadata.TotalItemCount);
         Assert.Equal(1, paginationMetadata.TotalPageCount);
-        Assert.Equal(3, movies!.Count);
+        Assert.Equal(3, moviesResponse!.Movies.Count());
     }
     
     [Fact]
@@ -51,9 +50,10 @@ public class MoviesControllerTests : IClassFixture<TestingWebAppFactory<Program>
 
         // Assert
         response.EnsureSuccessStatusCode();
-        var movies = await response.Content.ReadFromJsonAsync<List<MovieDto>>();
+        var moviesResponse = await response.Content.ReadFromJsonAsync<MoviesDto>();
+        var movies = moviesResponse!.Movies.ToList();
 
-        Assert.Single(movies!);
+        Assert.Single(movies);
         Assert.Equal("Star Wars", movies[0].Title);
     }
     
@@ -65,9 +65,10 @@ public class MoviesControllerTests : IClassFixture<TestingWebAppFactory<Program>
 
         // Assert
         response.EnsureSuccessStatusCode();
-        var movies = await response.Content.ReadFromJsonAsync<List<MovieDto>>();
+        var moviesResponse = await response.Content.ReadFromJsonAsync<MoviesDto>();
+        var movies = moviesResponse!.Movies.ToList();
 
-        Assert.Single(movies!);
+        Assert.Single(movies);
         Assert.Equal("Fantasy", movies[0].Genre);
     }
     
@@ -81,7 +82,7 @@ public class MoviesControllerTests : IClassFixture<TestingWebAppFactory<Program>
         response.EnsureSuccessStatusCode();
         var movie = await response.Content.ReadFromJsonAsync<MovieDto>();
         
-        Assert.Equal("Star Wars", movie.Title);
+        Assert.Equal("Star Wars", movie!.Title);
         Assert.Equal(DateOnly.Parse("2024-01-01"), movie.ReleaseDate);
         Assert.Equal("Fantasy", movie.Genre);
         Assert.Equal(90, movie.Runtime);

@@ -11,4 +11,5 @@ public class MovieWithoutCinemasDto
     public string Director { get; set; } = string.Empty;
     public string Rating { get; set; } = string.Empty;
     public string PrincessTheatreMovieId { get; set; } = string.Empty;
+    public decimal? AverageMovieReviewScore { get; set; }
 }

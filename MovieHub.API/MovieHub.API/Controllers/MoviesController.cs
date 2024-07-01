@@ -7,7 +7,7 @@ using MovieHub.API.Services;
 namespace MovieHub.API.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/movies")]
 public class MoviesController : ControllerBase
 {
     private readonly IMovieHubRepository _movieHubRepository;
@@ -24,7 +24,7 @@ public class MoviesController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerator<MovieDto>>> GetMovies(string? title, string? genre,
+    public async Task<ActionResult<MoviesDto>> GetMovies(string? title, string? genre,
         int pageNumber = 1, int pageSize = 20)
     {
         if (pageSize > MaxMoviesPageSize)
@@ -38,8 +38,13 @@ public class MoviesController : ControllerBase
             .GetMoviesAsync(title, genre, pageNumber, pageSize);
         
         Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+
+        var moviesDto = new MoviesDto()
+        {
+            Movies = _mapper.Map<ICollection<MovieWithoutCinemasDto>>(movieEntities)
+        };
         
-        return Ok(_mapper.Map<IEnumerable<MovieWithoutCinemasDto>>(movieEntities));
+        return Ok(moviesDto);
     }
 
     [HttpGet("{movieId}")]
@@ -48,10 +53,7 @@ public class MoviesController : ControllerBase
     public async Task<ActionResult<MovieDto>> GetMovie(int movieId, bool includeCinemas = true)
     {
         var movie = await _movieHubRepository.GetMovieAsync(movieId, includeCinemas);
-        if (movie == null)
-        {
-            return NotFound();
-        }
+        if (movie == null) return NotFound();
 
         var movieDto = _mapper.Map<MovieDto>(movie);
         if (includeCinemas)

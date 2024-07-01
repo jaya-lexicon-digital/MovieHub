@@ -118,6 +118,106 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "GET Movie Reviews",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api-host}}/api/movie/1/reviews",
+					"host": [
+						"{{api-host}}"
+					],
+					"path": [
+						"api",
+						"movie",
+						"1",
+						"reviews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Movie Review",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Score\": 95,\n    \"Comment\": \"Excellent Movie\",\n    \"ReviewDate\": \"2024-07-01T19:00:55.714942+10:00\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api-host}}/api/movie/1/reviews",
+					"host": [
+						"{{api-host}}"
+					],
+					"path": [
+						"api",
+						"movie",
+						"1",
+						"reviews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Movie Review",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Score\": 97,\n    \"Comment\": \"Excellent Movie\",\n    \"ReviewDate\": \"2024-07-01T18:00:55.714942+10:00\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api-host}}/api/movie/1/reviews/11",
+					"host": [
+						"{{api-host}}"
+					],
+					"path": [
+						"api",
+						"movie",
+						"1",
+						"reviews",
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Movie Review",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{api-host}}/api/movie/1/reviews/13",
+					"host": [
+						"{{api-host}}"
+					],
+					"path": [
+						"api",
+						"movie",
+						"1",
+						"reviews",
+						"13"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

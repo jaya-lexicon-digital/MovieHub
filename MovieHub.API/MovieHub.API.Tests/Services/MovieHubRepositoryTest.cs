@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using MovieHub.API.DbContexts;
 using MovieHub.API.Services;
 using MovieHub.API.Tests.Setup;
@@ -23,14 +20,15 @@ public class MovieHubRepositoryTest: IClassFixture<TestingWebAppFactory<Program>
     {
         // Act
         var (movieEntities, paginationMetadata) = await _repository.GetMoviesAsync(null, null,1,20);
-        var movie = movieEntities.ToList().First();
+        var moviesList = movieEntities.ToList();
+        var movie = moviesList.First();
 
         // Assert
         Assert.Equal(1, paginationMetadata.CurrentPage);
         Assert.Equal(20, paginationMetadata.PageSize);
         Assert.Equal(3, paginationMetadata.TotalItemCount);
         Assert.Equal(1, paginationMetadata.TotalPageCount);
-        Assert.Equal(3, movieEntities!.Count());
+        Assert.Equal(3, moviesList.Count());
         Assert.Equal(2, movie.Id);
         Assert.Equal("Die Hard", movie.Title);
         Assert.Equal(DateOnly.Parse("2024-01-01"), movie.ReleaseDate);
@@ -61,14 +59,15 @@ public class MovieHubRepositoryTest: IClassFixture<TestingWebAppFactory<Program>
     {
         // Act
         var (movieEntities, paginationMetadata) = await _repository.GetMoviesAsync("Star W", null,1, 20);
-        var movie = movieEntities.ToList().First();
+        var movies = movieEntities.ToList();
+        var movie = movies.First();
 
         // Assert
         Assert.Equal(1, paginationMetadata.CurrentPage);
         Assert.Equal(20, paginationMetadata.PageSize);
         Assert.Equal(1, paginationMetadata.TotalItemCount);
         Assert.Equal(1, paginationMetadata.TotalPageCount);
-        Assert.Equal(1, movieEntities!.Count());
+        Assert.Single(movies);
         Assert.Equal(1, movie.Id);
         Assert.Equal("Star Wars", movie.Title);
         Assert.Equal(DateOnly.Parse("2024-01-01"), movie.ReleaseDate);
@@ -85,14 +84,15 @@ public class MovieHubRepositoryTest: IClassFixture<TestingWebAppFactory<Program>
     {
         // Act
         var (movieEntities, paginationMetadata) = await _repository.GetMoviesAsync(null, "Com",1, 20);
-        var movie = movieEntities.ToList().First();
+        var movies = movieEntities.ToList();
+        var movie = movies.First();
 
         // Assert
         Assert.Equal(1, paginationMetadata.CurrentPage);
         Assert.Equal(20, paginationMetadata.PageSize);
         Assert.Equal(1, paginationMetadata.TotalItemCount);
         Assert.Equal(1, paginationMetadata.TotalPageCount);
-        Assert.Equal(1, movieEntities!.Count());
+        Assert.Single(movies);
         Assert.Equal(3, movie.Id);
         Assert.Equal("The Hangover", movie.Title);
         Assert.Equal(DateOnly.Parse("2024-01-01"), movie.ReleaseDate);
@@ -113,7 +113,7 @@ public class MovieHubRepositoryTest: IClassFixture<TestingWebAppFactory<Program>
         var movie = await _repository.GetMovieAsync(1, true);
 
         // Assert
-        Assert.Equal(1, movie.Id);
+        Assert.Equal(1, movie!.Id);
         Assert.Equal("Star Wars", movie.Title);
         Assert.Equal(DateOnly.Parse("2024-01-01"), movie.ReleaseDate);
         Assert.Equal("Fantasy", movie.Genre);
@@ -127,8 +127,8 @@ public class MovieHubRepositoryTest: IClassFixture<TestingWebAppFactory<Program>
         {
             var movieCinema = movie.MovieCinemas.First();
             Assert.Equal(2, movie.MovieCinemas.Count);
-            Assert.Equal("Star Wars", movieCinema.Movie.Title);
-            Assert.Equal("Village - Hoppers Crossing", movieCinema.Cinema.Name);
+            Assert.Equal("Star Wars", movieCinema.Movie!.Title);
+            Assert.Equal("Village - Hoppers Crossing", movieCinema.Cinema!.Name);
             Assert.Equal(DateOnly.Parse("2024-07-13"), movieCinema.Showtime);
             Assert.Equal(25m, movieCinema.TicketPrice);
         }
