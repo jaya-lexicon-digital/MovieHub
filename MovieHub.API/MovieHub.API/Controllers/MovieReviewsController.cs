@@ -76,7 +76,9 @@ public class MovieReviewsController : ControllerBase
     public async Task<ActionResult> UpdateMovieReview(int movieId, int movieReviewId, 
         MovieReviewForUpdateDto movieReviewForUpdateDto)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
         if (!await _movieHubRepository.MovieExistsAsync(movieId)) return NotFound();
+        
         var movieReviewEntity = await _movieHubRepository.GetReviewForMovieAsync(movieId, movieReviewId);
         if (movieReviewEntity == null) return NotFound();
 

@@ -37,9 +37,9 @@ public class MoviesControllerTests : IClassFixture<TestingWebAppFactory<Program>
         Assert.Equal("application/json; charset=utf-8", response.Content.Headers.ContentType?.ToString());
         Assert.Equal(1, paginationMetadata!.CurrentPage);
         Assert.Equal(20, paginationMetadata.PageSize);
-        Assert.Equal(3, paginationMetadata.TotalItemCount);
+        Assert.Equal(5, paginationMetadata.TotalItemCount);
         Assert.Equal(1, paginationMetadata.TotalPageCount);
-        Assert.Equal(3, moviesResponse!.Movies.Count());
+        Assert.Equal(5, moviesResponse!.Movies.Count());
     }
     
     [Fact]
@@ -95,6 +95,8 @@ public class MoviesControllerTests : IClassFixture<TestingWebAppFactory<Program>
         Assert.Equal("Cnr Derrimut Road &, Heaths Rd, Hoppers Crossing VIC 3030", movie.Cinemas.ElementAt(0).Location);
         Assert.Equal(DateOnly.Parse("2024-07-13"), movie.Cinemas.ElementAt(0).Showtime);
         Assert.Equal(25m, movie.Cinemas.ElementAt(0).TicketPrice);
+        Assert.Equal(70m, movie.AverageMovieReviewScore);
+        
     }
     
     [Fact]

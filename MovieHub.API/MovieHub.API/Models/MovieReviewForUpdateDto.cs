@@ -8,7 +8,7 @@ public class MovieReviewForUpdateDto
     [Range(0, 100)] 
     public decimal? Score { get; set; }
     
-    public string Comment { get; set; } = string.Empty;
+    public string? Comment { get; set; } = string.Empty;
     
     [Required]
     public DateTime? ReviewDate { get; set; }
