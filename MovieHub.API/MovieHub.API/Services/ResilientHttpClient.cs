@@ -7,22 +7,25 @@ public class ResilientHttpClient
 {
     private readonly AsyncRetryPolicy _retryPolicy;
     private readonly ILogger<ResilientHttpClient> _logger;
+    private readonly int _maxAttempts;
 
-    public ResilientHttpClient(ILogger<ResilientHttpClient> logger, int maxAttempts = 3, int exponentialBackoffInSeconds = 2)
+    public ResilientHttpClient(ILogger<ResilientHttpClient> logger, int maxAttempts = 3,
+        int exponentialBackoffInSeconds = 2)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _retryPolicy = Policy.Handle<HttpRequestException>().WaitAndRetryAsync(maxAttempts,
             retryAttempt => TimeSpan.FromSeconds(Math.Pow(exponentialBackoffInSeconds, retryAttempt)));
+        _maxAttempts = maxAttempts;
     }
 
-    public async Task<HttpResponseMessage?> GetAsync(string? requestUri, Dictionary<string,string> headers)
+    public async Task<HttpResponseMessage?> GetAsync(string? requestUri, Dictionary<string, string> headers)
     {
         HttpResponseMessage? response = null;
-        var retryRequestUri = requestUri;
-        
-        using (var httpClient = new HttpClient())
+        var numberOfAttempts = 1;
+
+        await _retryPolicy.ExecuteAsync(async () =>
         {
-            await _retryPolicy.ExecuteAsync(async () =>
+            using (var httpClient = new HttpClient())
             {
                 try
                 {
@@ -30,24 +33,19 @@ public class ResilientHttpClient
                     {
                         httpClient.DefaultRequestHeaders.Add(keyValuePair.Key, keyValuePair.Value);
                     }
-                    response = await httpClient.GetAsync(retryRequestUri);
+
+                    response = await httpClient.GetAsync(requestUri);
                     response.EnsureSuccessStatusCode();
                 }
                 catch (HttpRequestException ex)
                 {
-                    _logger.LogWarning($"HTTP GET request: {retryRequestUri} \nfailed: {ex.Message}");
-                    
-                    // 'retryRequestUri' is my attempt to ensure a unique Uri as I noticed for a 403 response it was
-                    // always being cached incorrectly and hence future polly retry attempts would always fail!
-                    retryRequestUri = $"{requestUri}?retryTime={DateTime.Now:HH:mm:ss}";
-                    
-                    // TODO: the above comment doesn't actually work, hence need another way to recover from a 403.
-                    // However a brand new request of this.GetAsync(..) allows for different results other than 403. 
-                    
+                    _logger.LogWarning($"HTTP GET request: {requestUri}\nfailed: {ex.Message}" +
+                                       $"\nAttempts ({numberOfAttempts}/{_maxAttempts}) before reaching max retries.");
+                    numberOfAttempts++;
                     throw;
                 }
-            });
-        }
+            }
+        });
 
         return response;
     }
