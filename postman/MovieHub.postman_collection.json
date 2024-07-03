@@ -7,6 +7,71 @@
 	},
 	"item": [
 		{
+			"name": "MovieProviders",
+			"item": [
+				{
+					"name": "GET cinemaworld Movies",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://challenge.lexicondigital.com.au/api/v2/cinemaworld/movies",
+							"protocol": "https",
+							"host": [
+								"challenge",
+								"lexicondigital",
+								"com",
+								"au"
+							],
+							"path": [
+								"api",
+								"v2",
+								"cinemaworld",
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET filmworld Movies",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://challenge.lexicondigital.com.au/api/v2/filmworld/movies",
+							"protocol": "https",
+							"host": [
+								"challenge",
+								"lexicondigital",
+								"com",
+								"au"
+							],
+							"path": [
+								"api",
+								"v2",
+								"filmworld",
+								"movies"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "GET Movies",
 			"request": {
 				"method": "GET",
@@ -101,7 +166,7 @@
 			"response": []
 		},
 		{
-			"name": "GET Movie by Id",
+			"name": "GET Movie Details by Id",
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -204,7 +269,7 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "{{api-host}}/api/movie/1/reviews/13",
+					"raw": "{{api-host}}/api/movie/1/reviews/14",
 					"host": [
 						"{{api-host}}"
 					],
@@ -213,7 +278,7 @@
 						"movie",
 						"1",
 						"reviews",
-						"13"
+						"14"
 					]
 				}
 			},

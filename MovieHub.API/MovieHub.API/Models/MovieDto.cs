@@ -11,6 +11,7 @@ public class MovieDto
     public string Director { get; set; } = string.Empty;
     public string Rating { get; set; } = string.Empty;
     public string PrincessTheatreMovieId { get; set; } = string.Empty;
-    public ICollection<CinemaDto> Cinemas { get; set; } = new List<CinemaDto>();
     public decimal? AverageMovieReviewScore { get; set; }
+    public ICollection<CinemaDto> Cinemas { get; set; } = new List<CinemaDto>();
+    
 }

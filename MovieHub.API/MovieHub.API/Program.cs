@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MovieHub.API.DbContexts;
 using MovieHub.API.Services;
+using MovieHub.API.Services.PrincessTheatre;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<MovieHubDbContext>(dbContextOptions =>
     dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings:MovieHubDBConnectionString"]));
 
 builder.Services.AddScoped<IMovieHubRepository, MovieHubRepository>();
+builder.Services.AddScoped<ResilientHttpClient>();
+builder.Services.AddScoped<ICinemaProvider, PrincessTheatreCinemaProvider>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
