@@ -90,13 +90,12 @@ public class MoviesControllerTests : IClassFixture<TestingWebAppFactory<Program>
         Assert.Equal("Director", movie.Director);
         Assert.Equal("Rating", movie.Rating);
         Assert.Equal("PrincessTheatreMovieId", movie.PrincessTheatreMovieId);
-        Assert.Equal(2, movie.Cinemas.Count);
+        Assert.Equal(4, movie.Cinemas.Count); // 2 plus an extra 2 from the external 'CinemaProvider'
         Assert.Equal("Village - Hoppers Crossing", movie.Cinemas.ElementAt(0).Name);
         Assert.Equal("Cnr Derrimut Road &, Heaths Rd, Hoppers Crossing VIC 3030", movie.Cinemas.ElementAt(0).Location);
         Assert.Equal(DateOnly.Parse("2024-07-13"), movie.Cinemas.ElementAt(0).Showtime);
         Assert.Equal(25m, movie.Cinemas.ElementAt(0).TicketPrice);
         Assert.Equal(70m, movie.AverageMovieReviewScore);
-        
     }
     
     [Fact]

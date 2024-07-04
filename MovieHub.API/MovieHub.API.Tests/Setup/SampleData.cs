@@ -5,7 +5,7 @@ using MovieHub.API.Models;
 
 namespace MovieHub.API.Tests.Setup;
 
-public class SampleData
+public static class SampleData
 {
     public static MovieHubDbContext GetDefaultMovieHubDbContext()
     {
