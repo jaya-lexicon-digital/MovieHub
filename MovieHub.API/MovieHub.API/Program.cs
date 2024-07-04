@@ -16,7 +16,7 @@ builder.Services.AddDbContext<MovieHubDbContext>(dbContextOptions =>
     dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings:MovieHubDBConnectionString"]));
 
 builder.Services.AddScoped<IMovieHubRepository, MovieHubRepository>();
-builder.Services.AddScoped<ResilientHttpClient>();
+builder.Services.AddScoped<IHttpClient, ResilientHttpClient>();
 builder.Services.AddScoped<ICinemaProvider, PrincessTheatreCinemaProvider>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

@@ -3,7 +3,7 @@ using Polly.Retry;
 
 namespace MovieHub.API.Services;
 
-public class ResilientHttpClient
+public class ResilientHttpClient : IHttpClient
 {
     private readonly AsyncRetryPolicy _retryPolicy;
     private readonly ILogger<ResilientHttpClient> _logger;

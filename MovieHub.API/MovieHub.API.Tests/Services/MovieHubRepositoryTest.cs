@@ -5,9 +5,9 @@ using MovieHub.API.Tests.Setup;
 namespace MovieHub.API.Tests.Services;
 
 [Collection("MovieHubRepositoryTest")]
-public class MovieHubRepositoryTest : IClassFixture<TestingWebAppFactory<Program>>
+public class MovieHubRepositoryTest
 {
-    private IMovieHubRepository _repository;
+    private readonly IMovieHubRepository _repository;
     private static readonly MovieHubDbContext MovieHubDbContext = SampleData.GetDefaultMovieHubDbContext();
 
     public MovieHubRepositoryTest()

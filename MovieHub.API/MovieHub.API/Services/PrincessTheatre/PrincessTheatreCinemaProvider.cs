@@ -7,12 +7,12 @@ namespace MovieHub.API.Services.PrincessTheatre;
 public class PrincessTheatreCinemaProvider : ICinemaProvider
 {
     private readonly ILogger<PrincessTheatreCinemaProvider> _logger;
-    private readonly ResilientHttpClient _httpClient;
+    private readonly IHttpClient _httpClient;
     private readonly Dictionary<string, string> _movieProviders;
     private readonly Dictionary<string, string> _defaultHeaders;
 
     public PrincessTheatreCinemaProvider(IConfiguration configuration, ILogger<PrincessTheatreCinemaProvider> logger,
-        ResilientHttpClient httpClient)
+        IHttpClient httpClient)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));

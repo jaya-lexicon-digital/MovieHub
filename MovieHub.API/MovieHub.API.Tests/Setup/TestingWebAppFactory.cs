@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using MovieHub.API.DbContexts;
+using MovieHub.API.Services;
+using MovieHub.API.Tests.Setup.PrincessTheatre;
 
 namespace MovieHub.API.Tests.Setup;
 
@@ -12,6 +14,11 @@ public class TestingWebAppFactory<T> : WebApplicationFactory<Program>
     {
         builder.ConfigureServices(services =>
         {
+            // Replace original IHttpClient with a StubHttpClientForPrincessTheatre
+            var httpClient = services.SingleOrDefault(d => d.ServiceType == typeof(IHttpClient));
+            if (httpClient != null) services.Remove(httpClient);
+            services.AddScoped<IHttpClient, StubHttpClientForPrincessTheatre>();
+            
             // Replace original MovieHubDbContext with in-memory DB
             var dbContext = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<MovieHubDbContext>));
             if (dbContext != null) services.Remove(dbContext);
@@ -21,7 +28,7 @@ public class TestingWebAppFactory<T> : WebApplicationFactory<Program>
                 options.UseInMemoryDatabase("InMemoryMovieHubTest");
                 options.UseInternalServiceProvider(serviceProvider);
             });
-            
+
             // Create ServiceProvider and scope of the service, so that the new service (EF Core in-memory database)
             // can be provided to other classes through Dependency Injection. 
             var sp = services.BuildServiceProvider();
@@ -36,6 +43,7 @@ public class TestingWebAppFactory<T> : WebApplicationFactory<Program>
                     }
                     catch (Exception ex)
                     {
+                        Console.Error.WriteLine($"Database was not Created! Error: {ex.Message}");
                         throw;
                     }
                 }
