@@ -20,7 +20,7 @@ public class PrincessTheatreCinemaProviderTests
         _httpClient = new StubHttpClient();
         IConfiguration configuration = GetConfiguration();
         Mock<ILogger<PrincessTheatreCinemaProvider>> mockLogger = new Mock<ILogger<PrincessTheatreCinemaProvider>>();
-        
+
         _cinemaProvider = new PrincessTheatreCinemaProvider(configuration, mockLogger.Object, _httpClient);
     }
 
@@ -32,10 +32,12 @@ public class PrincessTheatreCinemaProviderTests
                 "CinemaProvider:PrincessTheatre:ApiKey", "ApiKey"
             },
             {
-                "CinemaProvider:PrincessTheatre:MovieProviders:filmworld", "https://test.filmworld.com.au/api/v2/filmworld/movies"
+                "CinemaProvider:PrincessTheatre:MovieProviders:filmworld",
+                "https://test.filmworld.com.au/api/v2/filmworld/movies"
             },
             {
-                "CinemaProvider:PrincessTheatre:MovieProviders:cinemaworld", "https://test.cinemaworld.com.au/api/v2/cinemaworld/movies"
+                "CinemaProvider:PrincessTheatre:MovieProviders:cinemaworld",
+                "https://test.cinemaworld.com.au/api/v2/cinemaworld/movies"
             }
         };
 
@@ -72,10 +74,10 @@ public class PrincessTheatreCinemaProviderTests
         Assert.Equal(2, cinemas.Count());
         Assert.Equal("Cinema World", cinema.Name);
         Assert.Equal("The address of Cinema World", cinema.Location);
-        Assert.Equal(DateOnly.FromDateTime(DateTime.Now), cinema.Showtime); 
+        Assert.Equal(DateOnly.FromDateTime(DateTime.Now), cinema.Showtime);
         Assert.Equal(20m, cinema.TicketPrice);
     }
-    
+
     [Fact]
     public async void Get_Cinemas_For_Movie_With_One_Movie_Provider_Not_Having_That_Movie()
     {
@@ -96,7 +98,7 @@ public class PrincessTheatreCinemaProviderTests
         // Assert
         Assert.Single(cinemas);
     }
-    
+
     [Fact]
     public async void Get_Cinemas_For_Movie_With_A_Movie_That_Does_Not_Exist()
     {
@@ -109,7 +111,7 @@ public class PrincessTheatreCinemaProviderTests
         // Assert
         Assert.Empty(cinemas);
     }
-    
+
     [Fact]
     public async void Get_Cinemas_For_Movie_With_One_Movie_Provider_Failing()
     {
@@ -126,7 +128,7 @@ public class PrincessTheatreCinemaProviderTests
         // Assert
         Assert.Single(cinemas);
     }
-    
+
     [Fact]
     public async void Get_Cinemas_For_Movie_With_All_Movie_Providers_Failing()
     {
