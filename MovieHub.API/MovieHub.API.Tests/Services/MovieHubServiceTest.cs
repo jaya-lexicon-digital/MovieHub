@@ -4,22 +4,22 @@ using MovieHub.API.Tests.Setup;
 
 namespace MovieHub.API.Tests.Services;
 
-[Collection("MovieHubRepositoryTest")]
-public class MovieHubRepositoryTest
+[Collection("MovieHubServiceTest")]
+public class MovieHubServiceTest
 {
-    private readonly IMovieHubRepository _repository;
+    private readonly IMovieHubService _service;
     private static readonly MovieHubDbContext MovieHubDbContext = SampleData.GetDefaultMovieHubDbContext();
 
-    public MovieHubRepositoryTest()
+    public MovieHubServiceTest()
     {
-        _repository = new MovieHubRepository(MovieHubDbContext);
+        _service = new MovieHubService(MovieHubDbContext);
     }
 
     [Fact]
     public async void Get_All_Movies()
     {
         // Act
-        var (movieEntities, paginationMetadata) = await _repository.GetMoviesAsync(null, null, 1, 20);
+        var (movieEntities, paginationMetadata) = await _service.GetMoviesAsync(null, null, 1, 20);
         var moviesList = movieEntities.ToList();
         var movie = moviesList.First();
 
@@ -45,7 +45,7 @@ public class MovieHubRepositoryTest
     public async void Get_All_Movies_None_Found()
     {
         // Act
-        var (movieEntities, paginationMetadata) = await _repository.GetMoviesAsync("NOT_FOUND", "NOT_FOUND", 1, 20);
+        var (movieEntities, paginationMetadata) = await _service.GetMoviesAsync("NOT_FOUND", "NOT_FOUND", 1, 20);
 
         // Assert
         Assert.Equal(1, paginationMetadata.CurrentPage);
@@ -59,7 +59,7 @@ public class MovieHubRepositoryTest
     public async void Get_All_Movies_By_Title()
     {
         // Act
-        var (movieEntities, paginationMetadata) = await _repository.GetMoviesAsync("Star W", null, 1, 20);
+        var (movieEntities, paginationMetadata) = await _service.GetMoviesAsync("Star W", null, 1, 20);
         var movies = movieEntities.ToList();
         var movie = movies.First();
 
@@ -85,7 +85,7 @@ public class MovieHubRepositoryTest
     public async void Get_All_Movies_By_Genre()
     {
         // Act
-        var (movieEntities, paginationMetadata) = await _repository.GetMoviesAsync(null, "Com", 1, 20);
+        var (movieEntities, paginationMetadata) = await _service.GetMoviesAsync(null, "Com", 1, 20);
         var movies = movieEntities.ToList();
         var movie = movies.First();
 
@@ -113,7 +113,7 @@ public class MovieHubRepositoryTest
     public async void Get_Movie_Details(bool includeCinemas)
     {
         // Act
-        var movie = await _repository.GetMovieAsync(1, true);
+        var movie = await _service.GetMovieAsync(1, true);
 
         // Assert
         Assert.Equal(1, movie!.Id);
@@ -142,7 +142,7 @@ public class MovieHubRepositoryTest
     public async void Get_Movie_Details_Not_Found()
     {
         // Act
-        var movie = await _repository.GetMovieAsync(-1, true);
+        var movie = await _service.GetMovieAsync(-1, true);
 
         // Assert
         Assert.Null(movie);
@@ -154,7 +154,7 @@ public class MovieHubRepositoryTest
     public async void Movie_Exists(int movieId, bool expectedResult)
     {
         // Act
-        var movieExists = await _repository.MovieExistsAsync(movieId);
+        var movieExists = await _service.MovieExistsAsync(movieId);
 
         // Assert
         Assert.Equal(expectedResult, movieExists);
@@ -164,7 +164,7 @@ public class MovieHubRepositoryTest
     public async void Get_All_Reviews_For_Movie()
     {
         // Act
-        var (movieReviewsEntities, paginationMetadata) = await _repository.GetReviewsForMovieAsync(movieId: 1, 1, 10);
+        var (movieReviewsEntities, paginationMetadata) = await _service.GetReviewsForMovieAsync(movieId: 1, 1, 10);
         var movieReviewsList = movieReviewsEntities.ToList();
         var movieReview = movieReviewsList.First();
 
@@ -187,7 +187,7 @@ public class MovieHubRepositoryTest
     public async void Get_All_Reviews_For_Movie_None_Found()
     {
         // Act
-        var (movieReviewsEntities, paginationMetadata) = await _repository.GetReviewsForMovieAsync(movieId: -1, 1, 10);
+        var (movieReviewsEntities, paginationMetadata) = await _service.GetReviewsForMovieAsync(movieId: -1, 1, 10);
 
         // Assert
         Assert.Equal(1, paginationMetadata.CurrentPage);
@@ -201,7 +201,7 @@ public class MovieHubRepositoryTest
     public async void Get_Review_For_Movie()
     {
         // Act
-        var movieReview = await _repository.GetReviewForMovieAsync(1, 2);
+        var movieReview = await _service.GetReviewForMovieAsync(1, 2);
 
         // Assert
         Assert.Equal(1, movieReview!.Movie!.Id);
@@ -221,7 +221,7 @@ public class MovieHubRepositoryTest
     public async void Get_Review_For_Movie_Not_Found(int movieId, int movieReviewId)
     {
         // Act
-        var movie = await _repository.GetReviewForMovieAsync(movieId, movieReviewId);
+        var movie = await _service.GetReviewForMovieAsync(movieId, movieReviewId);
 
         // Assert
         Assert.Null(movie);
@@ -238,14 +238,14 @@ public class MovieHubRepositoryTest
     {
         // Arrange
         const int movieId = 4;
-        var movie = await _repository.GetMovieAsync(movieId, false);
-        var (movieReviewsEntitiesPriorToAdd, _) = await _repository.GetReviewsForMovieAsync(movie!.Id, 1, 10);
+        var movie = await _service.GetMovieAsync(movieId, false);
+        var (movieReviewsEntitiesPriorToAdd, _) = await _service.GetReviewsForMovieAsync(movie!.Id, 1, 10);
         var movieReview = SampleData.GetDefaultMovieReview(movie: movie);
         
         // Act - Add Movie Review
-        await _repository.AddMovieReviewAsync(movie.Id, movieReview);
-        var isSaveSuccessful = await _repository.SaveChangesAsync();
-        var (movieReviewsEntitiesAfterAdd, _) = await _repository.GetReviewsForMovieAsync(movie.Id, 1, 10);
+        await _service.AddMovieReviewAsync(movie.Id, movieReview);
+        var isSaveSuccessful = await _service.SaveChangesAsync();
+        var (movieReviewsEntitiesAfterAdd, _) = await _service.GetReviewsForMovieAsync(movie.Id, 1, 10);
         var movieReviewsAfterAdd = movieReviewsEntitiesAfterAdd.ToList();
         var movieReviewAdded = movieReviewsAfterAdd.First();
         
@@ -265,15 +265,15 @@ public class MovieHubRepositoryTest
     {
         // Arrange
         const int movieId = 4;
-        var movie = await _repository.GetMovieAsync(movieId, false);
-        var (movieReviewsEntitiesPriorToDelete, _) = await _repository.GetReviewsForMovieAsync(movie!.Id, 1, 10);
+        var movie = await _service.GetMovieAsync(movieId, false);
+        var (movieReviewsEntitiesPriorToDelete, _) = await _service.GetReviewsForMovieAsync(movie!.Id, 1, 10);
         var movieReviewsPriorToDelete = movieReviewsEntitiesPriorToDelete.ToList();
         var movieReview = movieReviewsPriorToDelete.First();
         
         // Act - Delete Movie Review
-        _repository.DeleteMovieReview(movieReview);
-        var isDeleteSuccessful = await _repository.SaveChangesAsync();
-        var (movieReviewsEntitiesAfterDelete, _) = await _repository.GetReviewsForMovieAsync(movie.Id, 1, 10);
+        _service.DeleteMovieReview(movieReview);
+        var isDeleteSuccessful = await _service.SaveChangesAsync();
+        var (movieReviewsEntitiesAfterDelete, _) = await _service.GetReviewsForMovieAsync(movie.Id, 1, 10);
         
         // Assert
         Assert.Single(movieReviewsPriorToDelete);

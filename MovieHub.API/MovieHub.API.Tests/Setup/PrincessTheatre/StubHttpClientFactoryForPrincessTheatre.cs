@@ -2,9 +2,9 @@ using System.Net;
 
 namespace MovieHub.API.Tests.Setup.PrincessTheatre;
 
-public class StubHttpClientForPrincessTheatre : StubHttpClient
+public class StubHttpClientFactoryForPrincessTheatre : StubHttpClientFactory
 {
-    public StubHttpClientForPrincessTheatre() : base("https://challenge.lexicondigital.com.au/")
+    public StubHttpClientFactoryForPrincessTheatre() : base("https://challenge.lexicondigital.com.au/")
     {
         SetupStubScenarios();
     }

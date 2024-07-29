@@ -2,7 +2,7 @@ using MovieHub.API.Entities;
 
 namespace MovieHub.API.Services;
 
-public interface IMovieHubRepository
+public interface IMovieHubService
 {
     Task<bool> SaveChangesAsync();
 

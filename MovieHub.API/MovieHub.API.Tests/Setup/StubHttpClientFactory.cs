@@ -1,38 +1,29 @@
 using System.Net;
 using Moq;
 using Moq.Protected;
-using MovieHub.API.Services;
 using Newtonsoft.Json;
 
 namespace MovieHub.API.Tests.Setup;
 
-public class StubHttpClient : IHttpClient
+public class StubHttpClientFactory : IHttpClientFactory
 {
     private readonly Mock<HttpMessageHandler> _mockHttpMessageHandler;
-    private readonly HttpClient _httpClient;
+    private readonly Mock<IHttpClientFactory> _mockFactory;
     
-    public StubHttpClient(string? baseAddressUri = null)
+    public StubHttpClientFactory(string? baseAddressUri = null)
     {
         _mockHttpMessageHandler = new Mock<HttpMessageHandler>();
         var client = new HttpClient(_mockHttpMessageHandler.Object);
         if (baseAddressUri != null) client.BaseAddress = new Uri(baseAddressUri);
-        Mock<IHttpClientFactory> mockFactory = new();
-        mockFactory.Setup(e => e.CreateClient(It.IsAny<string>())).Returns(client);
-        _httpClient = mockFactory.Object.CreateClient();
+        _mockFactory = new Mock<IHttpClientFactory>();
+        _mockFactory.Setup(e => e.CreateClient(It.IsAny<string>())).Returns(client);
     }
 
-    public async Task<HttpResponseMessage?> GetAsync(string? requestUri, Dictionary<string, string> headers)
-    {
-        foreach (var keyValuePair in headers)
-        {
-            _httpClient.DefaultRequestHeaders.Add(keyValuePair.Key, keyValuePair.Value);
-        }
-        var response = await _httpClient.GetAsync(requestUri);
-        response.EnsureSuccessStatusCode();
-
-        return response;
+    public HttpClient CreateClient(string name)
+    { 
+        return _mockFactory.Object.CreateClient();
     }
-    
+
     public void StubHttpRequest<T>(string requestUrl, HttpStatusCode statusCode, T content)
     {
         var contentAsJson = (typeof(T) == typeof(string))
