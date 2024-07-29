@@ -4,11 +4,11 @@ using MovieHub.API.Entities;
 
 namespace MovieHub.API.Services;
 
-public class MovieHubRepository : IMovieHubRepository
+public class MovieHubService : IMovieHubService
 {
     private readonly MovieHubDbContext _context;
     
-    public MovieHubRepository(MovieHubDbContext context)
+    public MovieHubService(MovieHubDbContext context)
     {
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
@@ -21,7 +21,7 @@ public class MovieHubRepository : IMovieHubRepository
     public async Task<(IEnumerable<Movie>, PaginationMetadata)> GetMoviesAsync(string? title, string? genre,
         int pageNumber, int pageSize)
     {
-        var collection = _context.Movie as IQueryable<Movie>;
+        var collection = _context.Movie.AsNoTracking();
         if (!string.IsNullOrWhiteSpace(title))
         {
             title = title.Trim();

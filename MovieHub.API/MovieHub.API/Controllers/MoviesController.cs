@@ -10,17 +10,17 @@ namespace MovieHub.API.Controllers;
 [Route("api/movies")]
 public class MoviesController : ControllerBase
 {
-    private readonly IMovieHubRepository _movieHubRepository;
-    private readonly ICinemaProvider _cinemaProvider;
+    private readonly IMovieHubService _movieHubService;
+    private readonly ICinemaService _cinemaService;
     private readonly IMapper _mapper;
     private readonly ILogger<MoviesController> _logger;
     private const int MaxMoviesPageSize = 100;
 
-    public MoviesController(IMovieHubRepository movieHubRepository, ICinemaProvider cinemaProvider,
+    public MoviesController(IMovieHubService movieHubService, ICinemaService cinemaService,
         IMapper mapper, ILogger<MoviesController> logger)
     {
-        _movieHubRepository = movieHubRepository ?? throw new ArgumentNullException(nameof(movieHubRepository));
-        _cinemaProvider = cinemaProvider ?? throw new ArgumentNullException(nameof(cinemaProvider));
+        _movieHubService = movieHubService ?? throw new ArgumentNullException(nameof(movieHubService));
+        _cinemaService = cinemaService ?? throw new ArgumentNullException(nameof(cinemaService));
         _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
@@ -32,12 +32,13 @@ public class MoviesController : ControllerBase
     {
         if (pageSize > MaxMoviesPageSize)
         {
-            _logger.LogInformation($"Warning pageSize of: '{pageSize}' exceeds the max pageSize of: "
-                                   + $"'{MaxMoviesPageSize}', hence changing pageSize to the maximum allowed!");
+            _logger.LogInformation("Warning pageSize of: '{pageSize}' exceeds the max pageSize of: "
+                                   + "'{MaxMoviesPageSize}', hence changing pageSize to the maximum allowed!",
+                pageSize, MaxMoviesPageSize);
             pageSize = MaxMoviesPageSize;
         }
         
-        var (movieEntities, paginationMetadata) = await _movieHubRepository
+        var (movieEntities, paginationMetadata) = await _movieHubService
             .GetMoviesAsync(title, genre, pageNumber, pageSize);
         
         Response.Headers.Append("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
@@ -55,7 +56,7 @@ public class MoviesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<MovieDto>> GetMovie(int movieId, bool includeCinemas = true)
     {
-        var movie = await _movieHubRepository.GetMovieAsync(movieId, includeCinemas);
+        var movie = await _movieHubService.GetMovieAsync(movieId, includeCinemas);
         if (movie == null) return NotFound();
 
         var movieDto = _mapper.Map<MovieDto>(movie);
@@ -63,8 +64,8 @@ public class MoviesController : ControllerBase
         {
             movieDto.Cinemas = _mapper.Map<ICollection<CinemaDto>>(movie.MovieCinemas);
             
-            // Feature 3, add additional cinemas from a cinema provider
-            var additionalCinemas = await _cinemaProvider.GetCinemasForMovieAsync(movieDto.PrincessTheatreMovieId);
+            // Feature 3, add additional cinemas from the cinema service 
+            var additionalCinemas = await _cinemaService.GetCinemasForMovieAsync(movieDto.PrincessTheatreMovieId);
             ((List<CinemaDto>)movieDto.Cinemas).AddRange(additionalCinemas);
         }
 

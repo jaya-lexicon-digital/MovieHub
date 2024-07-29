@@ -14,10 +14,10 @@ public class TestingWebAppFactory<T> : WebApplicationFactory<Program>
     {
         builder.ConfigureServices(services =>
         {
-            // Replace original IHttpClient with a StubHttpClientForPrincessTheatre
-            var httpClient = services.SingleOrDefault(d => d.ServiceType == typeof(IHttpClient));
-            if (httpClient != null) services.Remove(httpClient);
-            services.AddScoped<IHttpClient, StubHttpClientForPrincessTheatre>();
+            // Replace original HttpClientFactory with a StubHttpClientFactoryForPrincessTheatre
+            var httpClientFactory = services.SingleOrDefault(d => d.ServiceType == typeof(IHttpClientFactory));
+            if (httpClientFactory != null) services.Remove(httpClientFactory);
+            services.AddScoped<IHttpClientFactory, StubHttpClientFactoryForPrincessTheatre>();
             
             // Replace original MovieHubDbContext with in-memory DB
             var dbContext = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<MovieHubDbContext>));

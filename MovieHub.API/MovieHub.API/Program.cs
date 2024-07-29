@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieHub.API.DbContexts;
 using MovieHub.API.Services;
 using MovieHub.API.Services.PrincessTheatre;
+using MovieHub.API.Services.PrincessTheatre.Config;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,11 +14,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<MovieHubDbContext>(dbContextOptions =>
-    dbContextOptions.UseSqlite(builder.Configuration["ConnectionStrings:MovieHubDBConnectionString"]));
+    dbContextOptions.UseSqlite(builder.Configuration.GetConnectionString("MovieHubDBConnectionString")));
 
-builder.Services.AddScoped<IMovieHubRepository, MovieHubRepository>();
-builder.Services.AddScoped<IHttpClient, ResilientHttpClient>();
-builder.Services.AddScoped<ICinemaProvider, PrincessTheatreCinemaProvider>();
+builder.Services.Configure<PrincessTheatreOptions>(
+    builder.Configuration.GetSection(PrincessTheatreOptions.PrincessTheatre)
+);
+
+builder.Services.AddHttpClient<ICinemaService, PrincessTheatreCinemaService>()
+    .AddStandardResilienceHandler();
+// For defaults of StandardResilienceHandler refer to:
+// https://learn.microsoft.com/en-us/dotnet/core/resilience/http-resilience?tabs=dotnet-cli#standard-resilience-handler-defaults
+
+builder.Services.AddTransient<IMovieHubService, MovieHubService>();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

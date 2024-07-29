@@ -1,9 +1,38 @@
+using MovieHub.API.Services.PrincessTheatre.Config;
 using MovieHub.API.Services.PrincessTheatre.Models;
 
 namespace MovieHub.API.Tests.Setup.PrincessTheatre;
 
 public static class SampleDataPrincessTheatre
 {
+    public const string UriForFilmWorld = "https://test.filmworld.com.au/api/v2/filmworld/movies";
+    public const string UriForCinemaworld = "https://test.cinemaworld.com.au/api/v2/cinemaworld/movies";
+
+    public static PrincessTheatreOptions GetDefaultPrincessTheatreOptions()
+    {
+        return new PrincessTheatreOptions()
+        {
+            DefaultHeaders =
+            {
+                { "apiKey", "apiKeyValue123" }
+            },
+            MovieProviders =
+            {
+                new MovieProvider()
+                {
+                    Name = "cinemaworld",
+                    Uri = UriForCinemaworld,
+                    Location = "The address of Cinema World"
+                },
+                new MovieProvider()
+                {
+                    Name = "filmworld",
+                    Uri = UriForFilmWorld,
+                    Location = "The address of Film World"
+                }
+            }
+        };
+    }
     public static MovieFromProviderDto GetDefaultMovieFromProviderDto(
         string id = "cmPrincessTheatreMovieId",
         string title = "Title",
